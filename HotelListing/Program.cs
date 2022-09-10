@@ -1,3 +1,5 @@
+using HotelListing.DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace HotelListing
@@ -13,6 +15,13 @@ namespace HotelListing
             }
             catch (Exception ex)
             {
+
+                string type = ex.GetType().Name;
+                if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+                {
+                    throw;
+                }
+
                 Log.Fatal(ex, "Application failed to start");
             }
             finally
@@ -38,6 +47,15 @@ namespace HotelListing
                             .AllowAnyMethod()
                             .AllowAnyHeader());
             });
+
+
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("HotelListingConnection"));
+                options.EnableSensitiveDataLogging(true);
+            }
+       );
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
