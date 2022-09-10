@@ -3,6 +3,7 @@ using HotelListing.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListing.DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220910171059_AlterRatingColOfHotelsTbl")]
+    partial class AlterRatingColOfHotelsTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,9 +87,9 @@ namespace HotelListing.DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("Rating")
-                        .HasPrecision(3, 2)
-                        .HasColumnType("decimal(3,2)");
+                    b.Property<double>("Rating")
+                        .HasPrecision(4, 2)
+                        .HasColumnType("float(4)");
 
                     b.HasKey("Id");
 
@@ -102,7 +104,7 @@ namespace HotelListing.DataAccess.Migrations
                             Address = "Negril",
                             CountryId = 1,
                             Name = "Sandals Resort And Spa",
-                            Rating = 4.5m
+                            Rating = 4.5
                         },
                         new
                         {
@@ -110,7 +112,7 @@ namespace HotelListing.DataAccess.Migrations
                             Address = "George Town",
                             CountryId = 3,
                             Name = "Comfort Suites",
-                            Rating = 4.3m
+                            Rating = 4.2999999999999998
                         },
                         new
                         {
@@ -118,7 +120,7 @@ namespace HotelListing.DataAccess.Migrations
                             Address = "Nassua",
                             CountryId = 2,
                             Name = "Grand Palladiem",
-                            Rating = 4m
+                            Rating = 4.0
                         });
                 });
 

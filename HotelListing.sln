@@ -5,11 +5,9 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing", "HotelListing\HotelListing.csproj", "{16FAB058-A80B-41B9-A40A-FCE51EA7DF84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.DataSeeding", "HotelListing.DataSeeding\HotelListing.DataSeeding.csproj", "{2DF9A4F0-5C4C-4D93-9DDE-5F28DB5CC0B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing.DataAccess", "HotelListing.DataAccess\HotelListing.DataAccess.csproj", "{A91C545F-8B41-4345-94E6-01807D855892}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.DataAccess", "HotelListing.DataAccess\HotelListing.DataAccess.csproj", "{A91C545F-8B41-4345-94E6-01807D855892}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.Models", "HotelListing.Models\HotelListing.Models.csproj", "{5748E843-7188-4B5F-8E22-B07814F7D8B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing.Models", "HotelListing.Models\HotelListing.Models.csproj", "{5748E843-7188-4B5F-8E22-B07814F7D8B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{16FAB058-A80B-41B9-A40A-FCE51EA7DF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16FAB058-A80B-41B9-A40A-FCE51EA7DF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16FAB058-A80B-41B9-A40A-FCE51EA7DF84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DF9A4F0-5C4C-4D93-9DDE-5F28DB5CC0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DF9A4F0-5C4C-4D93-9DDE-5F28DB5CC0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DF9A4F0-5C4C-4D93-9DDE-5F28DB5CC0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2DF9A4F0-5C4C-4D93-9DDE-5F28DB5CC0B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A91C545F-8B41-4345-94E6-01807D855892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A91C545F-8B41-4345-94E6-01807D855892}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A91C545F-8B41-4345-94E6-01807D855892}.Release|Any CPU.ActiveCfg = Release|Any CPU

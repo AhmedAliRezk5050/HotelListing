@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Models
 {
@@ -12,7 +13,8 @@ namespace HotelListing.Models
         [MaxLength(100)]
         public string Address { get; set; } = null!;
 
-        public double Rating { get; set; }
+        [Precision(3,2)]
+        public decimal Rating { get; set; }
 
         public int CountryId { get; set; }
 
