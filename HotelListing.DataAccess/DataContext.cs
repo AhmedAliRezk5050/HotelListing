@@ -15,6 +15,7 @@ namespace HotelListing.DataAccess
 
         public DbSet<Hotel> Hotels { get; set; } = null!;
 
+        // Data Seeding
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Country>().HasData(
