@@ -29,6 +29,16 @@ namespace HotelListing
             builder.Host.UseSerilog((ctx, lc) => lc
                 .WriteTo.Console());
             builder.Services.AddControllers();
+
+            builder.Services.AddCors(o =>
+            {
+                o.AddPolicy("AllowAll",
+                    policyBuilder =>
+                        policyBuilder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader());
+            });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -39,6 +49,8 @@ namespace HotelListing
 
             app.UseHttpsRedirection();
 
+            app.UseCors("AllowAll");
+            
             app.UseAuthorization();
 
             app.MapControllers();
