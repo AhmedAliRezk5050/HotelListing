@@ -1,6 +1,7 @@
 using HotelListing.DataAccess;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.DataAccess.Repository;
+using HotelListing.Models.AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -49,6 +50,7 @@ namespace HotelListing
                             .AllowAnyHeader());
             });
 
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddDbContext<DataContext>(options =>
                 {
