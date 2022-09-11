@@ -1,4 +1,6 @@
 using HotelListing.DataAccess;
+using HotelListing.DataAccess.IRepository;
+using HotelListing.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -15,7 +17,6 @@ namespace HotelListing
             }
             catch (Exception ex)
             {
-
                 string type = ex.GetType().Name;
                 if (type.Equals("StopTheHostException", StringComparison.Ordinal))
                 {
@@ -50,11 +51,13 @@ namespace HotelListing
 
 
             builder.Services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("HotelListingConnection"));
-                options.EnableSensitiveDataLogging(true);
-            }
-       );
+                {
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("HotelListingConnection"));
+                    options.EnableSensitiveDataLogging(true);
+                }
+            );
+            
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             builder.Services.AddEndpointsApiExplorer();
@@ -68,7 +71,7 @@ namespace HotelListing
             app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
-            
+
             app.UseAuthorization();
 
             app.MapControllers();
