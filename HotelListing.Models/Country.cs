@@ -11,5 +11,8 @@ namespace HotelListing.Models
 
         [MaxLength(10)]
         public string ShortName { get; set; } = null!;
+
+        // no virtual => no lazy loading
+        public List<Hotel> Hotels { get; set; }  = null!;
     }
 }
