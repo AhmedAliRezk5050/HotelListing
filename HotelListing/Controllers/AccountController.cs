@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.Models;
 using HotelListing.Models.Dtos.User;
+using HotelListing.Utiliy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,17 +56,7 @@ public class AccountController : ControllerBase
             }
 
 
-            try
-            {
-                var addRolesResult = await _userManager.AddToRolesAsync(user, model.Roles);
-
-                if (!addRolesResult.Succeeded) throw new Exception("Error adding roles");
-            }
-            catch (Exception e)
-            {
-                await DeleteUserIfExist(model.UserName);
-                return BadRequest();
-            }
+            await AddRolesToUser(user, model.Roles!);
             
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -86,6 +77,20 @@ public class AccountController : ControllerBase
         if (userFromDb is not null)
         {
             await _userManager.DeleteAsync(userFromDb);
+        }
+    }
+
+    private async Task AddRolesToUser(AppUser user, IEnumerable<string> roles)
+    {
+        try
+        {
+            var addRolesResult = await _userManager.AddToRolesAsync(user, roles);
+
+            if (!addRolesResult.Succeeded) throw new Exception("Failed to add roles");
+        }
+        catch (Exception e)
+        {
+            await _userManager.AddToRoleAsync(user, Roles.User);
         }
     }
 }
