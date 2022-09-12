@@ -33,30 +33,59 @@ public class AccountController : ControllerBase
     {
         try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Failed to register");
-            }
-
             var user = _mapper.Map<AppUser>(model);
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded) return StatusCode(StatusCodes.Status201Created);
-            
-            foreach (var error in result.Errors)
+            if (!result.Succeeded)
             {
-                ModelState.AddModelError(error.Code, error.Description);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+    
+                return BadRequest(new
+                {
+                    // unify response shape
+                    errors = result.Errors.Zip(result.Errors,
+                            (x, y) =>
+                                new { Name = x.Code, Header = new List<string>() { y.Description } })
+                        .ToDictionary(kvp => kvp.Name, kvp => kvp.Header)
+                });
             }
 
-            return BadRequest(ModelState);
 
+            try
+            {
+                var addRolesResult = await _userManager.AddToRolesAsync(user, model.Roles);
+
+                if (!addRolesResult.Succeeded) throw new Exception("Error adding roles");
+            }
+            catch (Exception e)
+            {
+                await DeleteUserIfExist(model.UserName);
+                return BadRequest();
+            }
+            
+            return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception e)
         {
             _logger.LogError(e, $"Error in {nameof(AccountController)} controller" +
                                 $" and {nameof(Register)} Action");
+
+            await DeleteUserIfExist(model.UserName);
+
             return StatusCode(500, "Internal server error");
+        }
+    }
+
+    private async Task DeleteUserIfExist(string userName)
+    {
+        var userFromDb = await _userManager.FindByNameAsync(userName);
+        if (userFromDb is not null)
+        {
+            await _userManager.DeleteAsync(userFromDb);
         }
     }
 }

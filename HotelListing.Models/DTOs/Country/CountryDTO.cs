@@ -6,5 +6,5 @@ public class CountryDto: CreateCountryDto
 {
     public int Id { get; set; }
 
-    public List<HotelDto> Hotels { get; set; }
+    public List<HotelDto> Hotels { get; set; } = null!;
 }
