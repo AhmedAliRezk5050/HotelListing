@@ -27,6 +27,8 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries()
     {
         try
@@ -45,15 +47,12 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries/5
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountry(int id)
     {
         try
         {
-            if (id == 0)
-            {
-                return NotFound();
-            }
-
             var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string>{"Hotels"});
             CountryDTO countryDto = _mapper.Map<CountryDTO>(country);
 
@@ -61,10 +60,6 @@ public class CountryController : ControllerBase
             {
                 return NotFound();
             }
-            {
-                
-            }
-            
             return Ok(country);
         }
         catch (Exception e)
