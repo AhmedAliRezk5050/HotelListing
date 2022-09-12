@@ -1,9 +1,11 @@
 ﻿using HotelListing.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace HotelListing.DataAccess
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<AppUser>
     {
         public DataContext(DbContextOptions<DataContext> opts)
             : base(opts)
@@ -18,6 +20,8 @@ namespace HotelListing.DataAccess
         // Data Seeding
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Country>().HasData(
                 new Country()
                 {

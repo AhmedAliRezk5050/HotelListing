@@ -2,7 +2,9 @@ using System.Text.Json.Serialization;
 using HotelListing.DataAccess;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.DataAccess.Repository;
+using HotelListing.Models;
 using HotelListing.Models.AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -40,12 +42,13 @@ namespace HotelListing
 
             builder.Host.UseSerilog((ctx, lc) => lc
                 .WriteTo.Console());
-            
-            builder.Services.AddControllers().AddJsonOptions(options => 
-            { 
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
-            });;
+            });
+            ;
 
             builder.Services.AddCors(o =>
             {
@@ -65,6 +68,13 @@ namespace HotelListing
                 }
             );
             
+            builder.Services.AddAuthentication(); 
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(
+                    options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<DataContext>();
+            // .AddDefaultTokenProviders();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
