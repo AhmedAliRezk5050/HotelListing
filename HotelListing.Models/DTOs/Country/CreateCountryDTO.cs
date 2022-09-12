@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelListing.Models.DTOs.Country;
+namespace HotelListing.Models.Dtos.Country;
 
-public class CreateCountryDTO
+public class CreateCountryDto
 {
     [MaxLength(50, ErrorMessage = "Country name is too long(Max: {1})")]
     public string Name { get; set; } = null!;

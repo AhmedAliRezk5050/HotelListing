@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
-using HotelListing.Models.DTOs.Hotel;
+using HotelListing.Models.Dtos.Hotel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Controllers;
@@ -33,7 +33,7 @@ public class HotelController : ControllerBase
         try
         {
             var hotels = await _unitOfWork.Hotels.GetAllAsync();
-            List<HotelDTO> hotelDtoList = _mapper.Map<List<HotelDTO>>(hotels);
+            List<HotelDto> hotelDtoList = _mapper.Map<List<HotelDto>>(hotels);
             return Ok(hotelDtoList);
         }
         catch (Exception e)
@@ -53,7 +53,7 @@ public class HotelController : ControllerBase
         try
         {
             var hotel = await _unitOfWork.Hotels.GetAsync(c => c.Id == id, new List<string> {"Country"});
-            HotelDTO hotelDto = _mapper.Map<HotelDTO>(hotel);
+            HotelDto hotelDto= _mapper.Map<HotelDto>(hotel);
 
             if (hotelDto is null)
             {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
-using HotelListing.Models.DTOs.Country;
+using HotelListing.Models.Dtos.Country;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Controllers;
@@ -34,7 +34,7 @@ public class CountryController : ControllerBase
         try
         {
             var countries = await _unitOfWork.Countries.GetAllAsync();
-            List<CountryDTO> countryDtoList = _mapper.Map<List<CountryDTO>>(countries);
+            List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
             return Ok(countryDtoList);
         }
         catch (Exception e)
@@ -54,7 +54,7 @@ public class CountryController : ControllerBase
         try
         {
             var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string>{"Hotels"});
-            CountryDTO countryDto = _mapper.Map<CountryDTO>(country);
+            CountryDto countryDto= _mapper.Map<CountryDto>(country);
 
             if (countryDto is null)
             {

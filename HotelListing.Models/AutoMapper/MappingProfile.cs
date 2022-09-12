@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using HotelListing.Models.DTOs.Country;
-using HotelListing.Models.DTOs.Hotel;
-using HotelListing.Models.DTOs.User;
+using HotelListing.Models.Dtos.Country;
+using HotelListing.Models.Dtos.Hotel;
+using HotelListing.Models.Dtos.User;
 
 namespace HotelListing.Models.AutoMapper;
 
@@ -9,14 +9,14 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Country, CountryDTO>()
+        CreateMap<Country, CountryDto>()
             .ReverseMap();
-        CreateMap<Country, CreateCountryDTO>()
+        CreateMap<Country, CreateCountryDto>()
             .ReverseMap();
 
-        CreateMap<Hotel, HotelDTO>()
+        CreateMap<Hotel, HotelDto>()
             .ReverseMap();
-        CreateMap<Hotel, CreateHotelDTO>()
+        CreateMap<Hotel, CreateHotelDto>()
             .ReverseMap();
         
         CreateMap<AppUser, CreateUserDto>()

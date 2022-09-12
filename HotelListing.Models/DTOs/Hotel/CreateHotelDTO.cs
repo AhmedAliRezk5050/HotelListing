@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelListing.Models.DTOs.Hotel;
+namespace HotelListing.Models.Dtos.Hotel;
 
-public class CreateHotelDTO
+public class CreateHotelDto
 {
     [MaxLength(50, ErrorMessage = "Hotel name is too long(Max: {1})")]
     public string Name { get; set; } = null!;

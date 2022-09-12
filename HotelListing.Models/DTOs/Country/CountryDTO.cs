@@ -1,10 +1,10 @@
-﻿using HotelListing.Models.DTOs.Hotel;
+﻿using HotelListing.Models.Dtos.Hotel;
 
-namespace HotelListing.Models.DTOs.Country;
+namespace HotelListing.Models.Dtos.Country;
 
-public class CountryDTO : CreateCountryDTO
+public class CountryDto: CreateCountryDto
 {
     public int Id { get; set; }
 
-    public List<HotelDTO> Hotels { get; set; }
+    public List<HotelDto> Hotels { get; set; }
 }
