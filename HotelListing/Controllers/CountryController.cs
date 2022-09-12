@@ -25,6 +25,7 @@ public class CountryController : ControllerBase
         _mapper = mapper;
     }
 
+    // GET: api/Countries
     [HttpGet]
     public async Task<IActionResult> GetCountries()
     {
@@ -38,6 +39,38 @@ public class CountryController : ControllerBase
         {
             _logger.LogError(e, $"Error in {nameof(CountryController)} controller" +
                                 $" and {nameof(GetCountries)} Action");
+            return StatusCode(500, "Internal server error. Try again later");
+        }
+    }
+
+    // GET: api/Countries/5
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCountry(int id)
+    {
+        try
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+            CountryDTO countryDto = _mapper.Map<CountryDTO>(country);
+
+            if (countryDto is null)
+            {
+                return NotFound();
+            }
+            {
+                
+            }
+            
+            return Ok(country);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
+                                $" and [{nameof(GetCountries)}] Action");
             return StatusCode(500, "Internal server error. Try again later");
         }
     }
