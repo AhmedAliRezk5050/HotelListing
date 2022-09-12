@@ -54,7 +54,7 @@ public class CountryController : ControllerBase
                 return NotFound();
             }
 
-            var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+            var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string>{"Hotels"});
             CountryDTO countryDto = _mapper.Map<CountryDTO>(country);
 
             if (countryDto is null)

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using HotelListing.DataAccess;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.DataAccess.Repository;
@@ -39,7 +40,12 @@ namespace HotelListing
 
             builder.Host.UseSerilog((ctx, lc) => lc
                 .WriteTo.Console());
-            builder.Services.AddControllers();
+            
+            builder.Services.AddControllers().AddJsonOptions(options => 
+            { 
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });;
 
             builder.Services.AddCors(o =>
             {
