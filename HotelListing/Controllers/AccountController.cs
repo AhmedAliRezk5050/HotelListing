@@ -117,7 +117,7 @@ public class AccountController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, $"Error in {nameof(AddRolesToUser)} method");
-            await _userManager.AddToRoleAsync(user, Roles.User);
+            await _userManager.AddToRoleAsync(user, AppRoles.User);
         }
     }
 }

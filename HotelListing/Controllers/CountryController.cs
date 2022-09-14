@@ -49,7 +49,7 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries/5
     [HttpGet("{id}")]
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountry(int id)
