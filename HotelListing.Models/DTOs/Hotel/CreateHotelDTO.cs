@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace HotelListing.Models.DTOs.Hotel;
 
@@ -14,6 +15,7 @@ public class CreateHotelDto
     [Range(1, 5, ErrorMessage = "Hotel rating must be from {1} to {2}")]
     public decimal? Rating { get; set; }
 
+    [DisplayName("Country")]
     [Required(ErrorMessage = "Country is required")]
     public int? CountryId { get; set; }
 }
