@@ -1,5 +1,4 @@
 ﻿using HotelListing.Models;
-using HotelListing.Utiliy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

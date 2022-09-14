@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelListing.Models\HotelListing.Models.csproj" />
-    <ProjectReference Include="..\HotelListing.Utiliy\HotelListing.Utiliy.csproj" />
+    <ProjectReference Include="..\HotelListing.Utility\HotelListing.Utility.csproj" />
   </ItemGroup>
 
 </Project>

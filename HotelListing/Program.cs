@@ -4,9 +4,11 @@ using HotelListing.DataAccess.IRepository;
 using HotelListing.DataAccess.Repository;
 using HotelListing.Models;
 using HotelListing.Models.AutoMapper;
+using HotelListing.Models.Services.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace HotelListing
 {
@@ -39,7 +41,7 @@ namespace HotelListing
         private static void BuildApp(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var configuration = builder.Configuration;
             builder.Host.UseSerilog((ctx, lc) => lc
                 .WriteTo.Console());
 
@@ -67,29 +69,33 @@ namespace HotelListing
                     options.EnableSensitiveDataLogging(true);
                 }
             );
-            
-            builder.Services.AddAuthentication(); 
 
             builder.Services.AddIdentity<AppUser, IdentityRole>(
                     options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<DataContext>();
-            // .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
+            
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            
+            builder.Services.AddScoped<IAuthManager, AuthManager>();
+            
+            builder.Services.ConfigureJwt(configuration);
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-
+           
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
+            
+            app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

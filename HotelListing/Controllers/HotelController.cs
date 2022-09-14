@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
-using HotelListing.Models.Dtos.Hotel;
+using HotelListing.Models.DTOs.Hotel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Controllers;

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using HotelListing.Models;
-using HotelListing.Models.Dtos.User;
-using HotelListing.Utiliy;
+using HotelListing.Models.DTOs.User;
+using HotelListing.Models.Services.Auth;
+using HotelListing.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +13,18 @@ namespace HotelListing.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
+    private readonly IAuthManager _authManager;
     private readonly IMapper _mapper;
     private readonly ILogger<AccountController> _logger;
 
-    public AccountController(UserManager<AppUser>
-            userManager, SignInManager<AppUser> signInManager,
-        IMapper mapper, ILogger<AccountController> logger)
+    public AccountController(
+        UserManager<AppUser>userManager,
+        IAuthManager authManager,
+        IMapper mapper,
+        ILogger<AccountController> logger)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
+        _authManager = authManager;
         _mapper = mapper;
         _logger = logger;
     }
@@ -44,7 +47,7 @@ public class AccountController : ControllerBase
                 {
                     ModelState.AddModelError(error.Code, error.Description);
                 }
-    
+
                 return BadRequest(new
                 {
                     // unify response shape
@@ -57,7 +60,7 @@ public class AccountController : ControllerBase
 
 
             await AddRolesToUser(user, model.Roles!);
-            
+
             return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception e)
@@ -70,6 +73,29 @@ public class AccountController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LogInUserDto model)
+    {
+        try
+        {
+            if (!await _authManager.ValidateUser(model))
+            {
+                return Unauthorized();
+            }
+
+            var createTokenResponse = await _authManager.CreateToken();
+
+            return Ok(createTokenResponse);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in {nameof(AccountController)} controller" +
+                                $" and {nameof(Register)} Action");
+        }
+        return StatusCode(500, "Internal server error");
+    }
+
 
     private async Task DeleteUserIfExist(string userName)
     {
@@ -90,6 +116,7 @@ public class AccountController : ControllerBase
         }
         catch (Exception e)
         {
+            _logger.LogError(e, $"Error in {nameof(AddRolesToUser)} method");
             await _userManager.AddToRoleAsync(user, Roles.User);
         }
     }

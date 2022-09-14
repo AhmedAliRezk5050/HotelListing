@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
-using HotelListing.Models.Dtos.Country;
+using HotelListing.Models.DTOs.Country;
+using HotelListing.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListing.Controllers;
@@ -47,6 +49,7 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries/5
     [HttpGet("{id}")]
+    [Authorize(Roles = Roles.Admin)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountry(int id)

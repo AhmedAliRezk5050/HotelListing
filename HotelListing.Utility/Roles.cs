@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HotelListing.Utiliy
+﻿namespace HotelListing.Utility
 {
     public static class Roles
     {

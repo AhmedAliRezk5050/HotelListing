@@ -1,6 +1,6 @@
-﻿using HotelListing.Models.Dtos.Country;
+﻿using HotelListing.Models.DTOs.Country;
 
-namespace HotelListing.Models.Dtos.Hotel;
+namespace HotelListing.Models.DTOs.Hotel;
 
 public class HotelDto: CreateHotelDto
 {

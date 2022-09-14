@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using HotelListing.Models.Dtos.Country;
-using HotelListing.Models.Dtos.Hotel;
-using HotelListing.Models.Dtos.User;
+using HotelListing.Models.DTOs.Country;
+using HotelListing.Models.DTOs.Hotel;
+using HotelListing.Models.DTOs.User;
 
 namespace HotelListing.Models.AutoMapper;
 

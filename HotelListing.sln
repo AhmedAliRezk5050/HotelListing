@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing.DataAccess", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelListing.Models", "HotelListing.Models\HotelListing.Models.csproj", "{5748E843-7188-4B5F-8E22-B07814F7D8B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.Utiliy", "HotelListing.Utiliy\HotelListing.Utiliy.csproj", "{5A54AD99-F0FF-45DC-9936-CF103C4D52D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelListing.Utility", "HotelListing.Utility\HotelListing.Utility.csproj", "{5A54AD99-F0FF-45DC-9936-CF103C4D52D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
