@@ -18,8 +18,12 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<Hotel, CreateHotelDto>()
             .ReverseMap();
+        CreateMap<Hotel, UpdateHotelDto>()
+            .ReverseMap();
         
         CreateMap<AppUser, CreateUserDto>()
             .ReverseMap();
+        
+      
     }
 }

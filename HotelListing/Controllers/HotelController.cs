@@ -85,7 +85,7 @@ public class HotelController : ControllerBase
         try
         {
             Hotel hotel = _mapper.Map<Hotel>(model);
-            
+
             Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == model.CountryId);
 
             if (country is null)
@@ -99,12 +99,54 @@ public class HotelController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             // CreatedAtRoute => an url for hotel will be in Headers => Location
-            return CreatedAtRoute(nameof(GetHotel), new {id = hotel.Id}, hotel);
+            return CreatedAtRoute(nameof(GetHotel), new { id = hotel.Id }, hotel);
         }
         catch (Exception e)
         {
             _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
                                 $" and [{nameof(CreateHotel)}] Action");
+            return StatusCode(500, "Internal server error. Try again later");
+        }
+    }
+
+    [HttpPut("{id:int}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateHotel(int id, UpdateHotelDto dto)
+    {
+        try
+        {
+            if (id < 1 || id != dto.Id)
+            {
+                return BadRequest();
+            }
+
+            Hotel? hotel = await _unitOfWork.Hotels.GetAsync(h => h.Id == id);
+            
+            if (hotel is null) return BadRequest();
+
+            // --- Note -- 
+            // this can not be used here because we already fetched the hotel above and it became tracked
+            // Hotel? hotel = _mapper.Map<Hotel>(dto);
+            // _unitOfWork.Hotels.Update(hotel);
+            // will throw (The instance cannot be tracked
+            //      because another instance with the key value is already being tracked)
+            // --- Note -- 
+            
+            _mapper.Map(dto, hotel);
+
+            _unitOfWork.Hotels.Update(hotel);
+
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
+                                $" and [{nameof(UpdateHotel)}] Action");
             return StatusCode(500, "Internal server error. Try again later");
         }
     }
