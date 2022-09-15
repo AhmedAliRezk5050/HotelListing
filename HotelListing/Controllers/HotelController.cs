@@ -124,7 +124,7 @@ public class HotelController : ControllerBase
             }
 
             Hotel? hotel = await _unitOfWork.Hotels.GetAsync(h => h.Id == id);
-            
+
             if (hotel is null) return BadRequest();
 
             // --- Note -- 
@@ -134,7 +134,7 @@ public class HotelController : ControllerBase
             // will throw (The instance cannot be tracked
             //      because another instance with the key value is already being tracked)
             // --- Note -- 
-            
+
             _mapper.Map(dto, hotel);
 
             _unitOfWork.Hotels.Update(hotel);
@@ -147,6 +147,38 @@ public class HotelController : ControllerBase
         {
             _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
                                 $" and [{nameof(UpdateHotel)}] Action");
+            return StatusCode(500, "Internal server error. Try again later");
+        }
+    }
+
+
+    // DELETE: api/Hotels/id
+    [HttpDelete("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteHotel(int id)
+    {
+        try
+        {
+            if (id < 1) return BadRequest();
+
+            Hotel? hotel = await _unitOfWork.Hotels.GetAsync(h => h.Id == id);
+
+            if (hotel is null) return NotFound();
+
+            _unitOfWork.Hotels.Remove(hotel);
+
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
+                                $" and [{nameof(DeleteHotel)}] Action");
             return StatusCode(500, "Internal server error. Try again later");
         }
     }
