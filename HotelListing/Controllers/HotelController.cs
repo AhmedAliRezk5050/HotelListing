@@ -55,7 +55,8 @@ public class HotelController : ControllerBase
     {
         try
         {
-            var hotel = await _unitOfWork.Hotels.GetAsync(c => c.Id == id, new List<string> { "Country" });
+            var hotel = await _unitOfWork.Hotels
+                .GetAsync(c => c.Id == id, new List<string> { "Country" });
             HotelDto hotelDto = _mapper.Map<HotelDto>(hotel);
 
             if (hotelDto is null)
