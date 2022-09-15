@@ -99,4 +99,33 @@ public class CountryController : ControllerBase
             return StatusCode(500, "Internal server error. Try again later");
         }
     }
+
+    // PUT: api/Countries/id
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto dto)
+    {
+        try
+        {
+            if (id < 1 || id != dto.Id) return BadRequest();
+
+            Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+
+            if (country is null) return BadRequest();
+            
+            _unitOfWork.Countries.Update(_mapper.Map(dto, country));
+
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
+                                $" and [{nameof(UpdateCountry)}] Action");
+            return StatusCode(500, "Internal server error. Try again later");
+        }
+    }
 }

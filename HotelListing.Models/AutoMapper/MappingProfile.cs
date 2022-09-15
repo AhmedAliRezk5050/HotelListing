@@ -13,6 +13,8 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<Country, CreateCountryDto>()
             .ReverseMap();
+        CreateMap<Country, UpdateCountryDto>()
+            .ReverseMap();
 
         CreateMap<Hotel, HotelDto>()
             .ReverseMap();
