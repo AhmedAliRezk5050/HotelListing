@@ -128,4 +128,35 @@ public class CountryController : ControllerBase
             return StatusCode(500, "Internal server error. Try again later");
         }
     }
+    
+    // DELETE: api/countries/id
+    [HttpDelete("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteCountry(int id)
+    {
+        try
+        {
+            if (id < 1) return BadRequest();
+
+            Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+
+            if (country is null) return NotFound();
+
+            _unitOfWork.Countries.Remove(country);
+
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
+                                $" and [{nameof(DeleteCountry)}] Action");
+            return StatusCode(500, "Internal server error. Try again later");
+        }
+    }
 }
