@@ -34,18 +34,11 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)
     {
-        try
-        {
+            var x = 6;
+            Console.WriteLine(x/0);
             var countries = await _unitOfWork.Countries.GetAllAsync(queryParameters: queryParameters);
             List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
             return Ok(countryDtoList);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in {nameof(CountryController)} controller" +
-                                $" and {nameof(GetCountries)} Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
     // GET: api/Countries/5
@@ -54,8 +47,6 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountry(int id)
     {
-        try
-        {
             var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string> { "Hotels" });
             CountryDto countryDto = _mapper.Map<CountryDto>(country);
 
@@ -65,13 +56,6 @@ public class CountryController : ControllerBase
             }
 
             return Ok(country);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
-                                $" and [{nameof(GetCountries)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
     // POST: api/Countries
@@ -82,8 +66,6 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateCountry(CreateCountryDto model)
     {
-        try
-        {
             Country country = _mapper.Map<Country>(model);
 
             await _unitOfWork.Countries.Add(country);
@@ -91,13 +73,6 @@ public class CountryController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             return CreatedAtRoute(nameof(GetCountry), new { id = country.Id }, country);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
-                                $" and [{nameof(CreateCountry)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
     // PUT: api/Countries/id
@@ -107,8 +82,6 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto dto)
     {
-        try
-        {
             if (id < 1 || id != dto.Id) return BadRequest();
 
             Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
@@ -120,13 +93,6 @@ public class CountryController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             return NoContent();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
-                                $" and [{nameof(UpdateCountry)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
     
     // DELETE: api/countries/id
@@ -138,8 +104,6 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteCountry(int id)
     {
-        try
-        {
             if (id < 1) return BadRequest();
 
             Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
@@ -151,12 +115,5 @@ public class CountryController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             return NoContent();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(CountryController)}] controller" +
-                                $" and [{nameof(DeleteCountry)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 }

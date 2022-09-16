@@ -77,8 +77,6 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LogInUserDto model)
     {
-        try
-        {
             if (!await _authManager.ValidateUser(model))
             {
                 return Unauthorized();
@@ -87,13 +85,6 @@ public class AccountController : ControllerBase
             var createTokenResponse = await _authManager.CreateToken();
 
             return Ok(createTokenResponse);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in {nameof(AccountController)} controller" +
-                                $" and {nameof(Register)} Action");
-        }
-        return StatusCode(500, "Internal server error");
     }
 
 

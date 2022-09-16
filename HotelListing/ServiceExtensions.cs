@@ -1,7 +1,10 @@
 ﻿using System.Text;
+using HotelListing.Models;
 using HotelListing.Models.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace HotelListing;
 
@@ -30,14 +33,39 @@ public static class ServiceExtensions
                 };
             });
     }
-    
-    private static  SymmetricSecurityKey GetSecurityKey()
+
+    public static void ConfigureExceptionHandler(this IApplicationBuilder app)
+    {
+        app.UseExceptionHandler(error =>
+        {
+            error.Run(async context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                if (contextFeature is not null)
+                {
+                    Log.Error("Something went wrong: {ContextFeatureError}",
+                        contextFeature.Error.Message);
+                    await context.Response.WriteAsync(new Error()
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Message = "Internal server error. please try again later."
+                    }.ToString());
+                }
+            });
+        });
+    }
+
+    private static SymmetricSecurityKey GetSecurityKey()
     {
         var key = Environment.GetEnvironmentVariable("HotelListingApiSecretKey");
         if (key is null)
         {
             throw new Exception("No secret key found");
         }
+
         return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
     }
 }

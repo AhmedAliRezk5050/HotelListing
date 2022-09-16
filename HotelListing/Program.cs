@@ -90,6 +90,7 @@ namespace HotelListing
             app.UseSwagger();
             app.UseSwaggerUI();
 
+            app.ConfigureExceptionHandler();    
 
             app.UseCors("AllowAll");
             

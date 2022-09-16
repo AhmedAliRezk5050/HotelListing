@@ -34,18 +34,9 @@ public class HotelController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetHotels([FromQuery] QueryParameters queryParameters)
     {
-        try
-        {
             var hotels = await _unitOfWork.Hotels.GetAllAsync(queryParameters: queryParameters);
             List<HotelDto> hotelDtoList = _mapper.Map<List<HotelDto>>(hotels);
             return Ok(hotelDtoList);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in {nameof(HotelController)} controller" +
-                                $" and {nameof(GetHotels)} Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
     // GET: api/Hotels/5
@@ -55,8 +46,6 @@ public class HotelController : ControllerBase
     public async Task<IActionResult> GetHotel(int id)
     {
         
-        try
-        {
             var hotel = await _unitOfWork.Hotels
                 .GetAsync(c => c.Id == id, new List<string> { "Country" });
             HotelDto hotelDto = _mapper.Map<HotelDto>(hotel);
@@ -67,13 +56,6 @@ public class HotelController : ControllerBase
             }
 
             return Ok(hotel);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
-                                $" and [{nameof(GetHotels)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
 
@@ -85,8 +67,6 @@ public class HotelController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateHotel(CreateHotelDto model)
     {
-        try
-        {
             Hotel hotel = _mapper.Map<Hotel>(model);
 
             Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == model.CountryId);
@@ -103,13 +83,6 @@ public class HotelController : ControllerBase
 
             // CreatedAtRoute => an url for hotel will be in Headers => Location
             return CreatedAtRoute(nameof(GetHotel), new { id = hotel.Id }, hotel);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
-                                $" and [{nameof(CreateHotel)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
     [HttpPut("{id:int}")]
@@ -119,8 +92,6 @@ public class HotelController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateHotel(int id, UpdateHotelDto dto)
     {
-        try
-        {
             if (id < 1 || id != dto.Id)
             {
                 return BadRequest();
@@ -145,13 +116,6 @@ public class HotelController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             return NoContent();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
-                                $" and [{nameof(UpdateHotel)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 
 
@@ -164,8 +128,6 @@ public class HotelController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteHotel(int id)
     {
-        try
-        {
             if (id < 1) return BadRequest();
 
             Hotel? hotel = await _unitOfWork.Hotels.GetAsync(h => h.Id == id);
@@ -177,12 +139,5 @@ public class HotelController : ControllerBase
             await _unitOfWork.SaveAsync();
 
             return NoContent();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"Error in [{nameof(HotelController)}] controller" +
-                                $" and [{nameof(DeleteHotel)}] Action");
-            return StatusCode(500, "Internal server error. Try again later");
-        }
     }
 }
