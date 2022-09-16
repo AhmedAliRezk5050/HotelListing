@@ -34,8 +34,6 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)
     {
-            var x = 6;
-            Console.WriteLine(x/0);
             var countries = await _unitOfWork.Countries.GetAllAsync(queryParameters: queryParameters);
             List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
             return Ok(countryDtoList);
