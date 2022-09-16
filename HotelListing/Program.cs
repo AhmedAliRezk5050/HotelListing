@@ -50,7 +50,8 @@ namespace HotelListing
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
             });
-            ;
+            
+            builder.Services.ConfigureVersioning();
 
             builder.Services.AddCors(o =>
             {

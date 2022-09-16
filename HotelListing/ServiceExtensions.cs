@@ -3,6 +3,7 @@ using HotelListing.Models;
 using HotelListing.Models.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
@@ -58,6 +59,16 @@ public static class ServiceExtensions
         });
     }
 
+    public static void ConfigureVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(opt =>
+        {
+            opt.ReportApiVersions = true;
+            opt.AssumeDefaultVersionWhenUnspecified = true;
+            opt.DefaultApiVersion = new ApiVersion(1, 0);
+        });
+    }
+    
     private static SymmetricSecurityKey GetSecurityKey()
     {
         var key = Environment.GetEnvironmentVariable("HotelListingApiSecretKey");
