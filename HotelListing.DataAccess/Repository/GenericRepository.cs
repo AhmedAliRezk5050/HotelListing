@@ -1,6 +1,8 @@
 ﻿using System.Linq.Expressions;
 using HotelListing.DataAccess.IRepository;
+using HotelListing.Models.DataTypes;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace HotelListing.DataAccess.Repository;
 
@@ -29,8 +31,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return query.FirstOrDefaultAsync();
     }
 
-    public Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includes = null)
+    public Task<IPagedList<T>> GetAllAsync(
+        Expression<Func<T, bool>>? filter = null,
+        Func<IQueryable<T>,
+            IOrderedQueryable<T>>? orderBy = null,
+        List<string>? includes = null,
+        QueryParameters? queryParameters = null
+    )
     {
         IQueryable<T> query = dbSet;
 
@@ -49,7 +56,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             query = orderBy(query);
         }
 
-        return query.ToListAsync();
+        queryParameters ??= new QueryParameters();
+        
+        return query.AsNoTracking()
+            .ToPagedListAsync(queryParameters.PageNumber, queryParameters.PageSize);
     }
 
     public async Task Add(T entity)

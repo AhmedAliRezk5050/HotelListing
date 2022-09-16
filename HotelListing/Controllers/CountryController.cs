@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.Models;
+using HotelListing.Models.DataTypes;
 using HotelListing.Models.DTOs.Country;
 using HotelListing.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,6 @@ public class CountryController : ControllerBase
 
         _unitOfWork = unitOfWork;
 
-
         _mapper = mapper;
     }
 
@@ -32,11 +32,11 @@ public class CountryController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCountries()
+    public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)
     {
         try
         {
-            var countries = await _unitOfWork.Countries.GetAllAsync();
+            var countries = await _unitOfWork.Countries.GetAllAsync(queryParameters: queryParameters);
             List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
             return Ok(countryDtoList);
         }

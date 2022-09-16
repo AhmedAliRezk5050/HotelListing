@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.Models;
+using HotelListing.Models.DataTypes;
 using HotelListing.Models.DTOs.Hotel;
 using HotelListing.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -31,11 +32,11 @@ public class HotelController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetHotels()
+    public async Task<IActionResult> GetHotels([FromQuery] QueryParameters queryParameters)
     {
         try
         {
-            var hotels = await _unitOfWork.Hotels.GetAllAsync();
+            var hotels = await _unitOfWork.Hotels.GetAllAsync(queryParameters: queryParameters);
             List<HotelDto> hotelDtoList = _mapper.Map<List<HotelDto>>(hotels);
             return Ok(hotelDtoList);
         }
@@ -53,6 +54,7 @@ public class HotelController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetHotel(int id)
     {
+        
         try
         {
             var hotel = await _unitOfWork.Hotels
