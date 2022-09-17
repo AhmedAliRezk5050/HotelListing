@@ -4,6 +4,7 @@ using HotelListing.Models;
 using HotelListing.Models.DataTypes;
 using HotelListing.Models.DTOs.Country;
 using HotelListing.Utility;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,26 +37,28 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)
     {
-            var countries = await _unitOfWork.Countries.GetAllAsync(queryParameters: queryParameters);
-            List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
-            return Ok(countryDtoList);
+        var countries = await _unitOfWork.Countries.GetAllAsync(queryParameters: queryParameters);
+        List<CountryDto> countryDtoList = _mapper.Map<List<CountryDto>>(countries);
+        return Ok(countryDtoList);
     }
 
     // GET: api/Countries/5
     [HttpGet("{id:int}", Name = "GetCountry")]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+    [HttpCacheValidation(MustRevalidate = false)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountry(int id)
     {
-            var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string> { "Hotels" });
-            CountryDto countryDto = _mapper.Map<CountryDto>(country);
+        var country = await _unitOfWork.Countries.GetAsync(c => c.Id == id, new List<string> { "Hotels" });
+        CountryDto countryDto = _mapper.Map<CountryDto>(country);
 
-            if (countryDto is null)
-            {
-                return NotFound();
-            }
+        if (countryDto is null)
+        {
+            return NotFound();
+        }
 
-            return Ok(country);
+        return Ok(country);
     }
 
     // POST: api/Countries
@@ -66,13 +69,13 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateCountry(CreateCountryDto model)
     {
-            Country country = _mapper.Map<Country>(model);
+        Country country = _mapper.Map<Country>(model);
 
-            await _unitOfWork.Countries.Add(country);
+        await _unitOfWork.Countries.Add(country);
 
-            await _unitOfWork.SaveAsync();
+        await _unitOfWork.SaveAsync();
 
-            return CreatedAtRoute(nameof(GetCountry), new { id = country.Id }, country);
+        return CreatedAtRoute(nameof(GetCountry), new { id = country.Id }, country);
     }
 
     // PUT: api/Countries/id
@@ -82,19 +85,19 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateCountry(int id, UpdateCountryDto dto)
     {
-            if (id < 1 || id != dto.Id) return BadRequest();
+        if (id < 1 || id != dto.Id) return BadRequest();
 
-            Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+        Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
 
-            if (country is null) return BadRequest();
-            
-            _unitOfWork.Countries.Update(_mapper.Map(dto, country));
+        if (country is null) return BadRequest();
 
-            await _unitOfWork.SaveAsync();
+        _unitOfWork.Countries.Update(_mapper.Map(dto, country));
 
-            return NoContent();
+        await _unitOfWork.SaveAsync();
+
+        return NoContent();
     }
-    
+
     // DELETE: api/countries/id
     [HttpDelete("{id:int}")]
     [Authorize(Roles = AppRoles.Admin)]
@@ -104,16 +107,16 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteCountry(int id)
     {
-            if (id < 1) return BadRequest();
+        if (id < 1) return BadRequest();
 
-            Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
+        Country? country = await _unitOfWork.Countries.GetAsync(c => c.Id == id);
 
-            if (country is null) return NotFound();
+        if (country is null) return NotFound();
 
-            _unitOfWork.Countries.Remove(country);
+        _unitOfWork.Countries.Remove(country);
 
-            await _unitOfWork.SaveAsync();
+        await _unitOfWork.SaveAsync();
 
-            return NoContent();
+        return NoContent();
     }
 }
