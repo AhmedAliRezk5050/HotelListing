@@ -11,6 +11,7 @@ namespace HotelListing.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[ResponseCache(CacheProfileName = "120SecondsDuration")]
 public class CountryController : ControllerBase
 {
     private readonly ILogger<CountryController> _logger;
@@ -30,7 +31,7 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries
     [HttpGet]
-    [ResponseCache(Duration = 60)]
+    [ResponseCache(Duration = 180)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)

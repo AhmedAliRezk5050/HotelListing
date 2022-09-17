@@ -6,6 +6,7 @@ using HotelListing.Models;
 using HotelListing.Models.AutoMapper;
 using HotelListing.Models.Services.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -45,12 +46,18 @@ namespace HotelListing
             builder.Host.UseSerilog((ctx, lc) => lc
                 .WriteTo.Console());
 
-            builder.Services.AddControllers().AddJsonOptions(options =>
+            builder.Services.AddControllers(config =>
+            {
+                config.CacheProfiles.Add("120SecondsDuration", new CacheProfile()
+                {
+                    Duration = 120
+                });
+            }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
             });
-            
+
             builder.Services.ConfigureVersioning();
 
             builder.Services.AddCors(o =>
@@ -75,30 +82,30 @@ namespace HotelListing
                     options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
-            
+
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+
             builder.Services.AddScoped<IAuthManager, AuthManager>();
-            
+
             builder.Services.ConfigureJwt(configuration);
-            
+
             builder.Services.ConfigureResponseCaching();
-            
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
-           
+
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.ConfigureExceptionHandler();    
+            app.ConfigureExceptionHandler();
 
             app.UseCors("AllowAll");
-            
+
             app.UseResponseCaching();
-            
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
