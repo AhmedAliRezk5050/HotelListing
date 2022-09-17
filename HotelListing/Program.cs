@@ -91,7 +91,8 @@ namespace HotelListing
             builder.Services.ConfigureJwt(configuration);
 
             builder.Services.ConfigureResponseCaching();
-
+            builder.Services.ConfigureHttpCacheHeaders();
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -105,7 +106,8 @@ namespace HotelListing
             app.UseCors("AllowAll");
 
             app.UseResponseCaching();
-
+            app.UseHttpCacheHeaders();
+            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
