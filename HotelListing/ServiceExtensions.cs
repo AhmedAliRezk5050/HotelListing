@@ -70,7 +70,12 @@ public static class ServiceExtensions
             opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
         });
     }
-    
+
+
+    public static void ConfigureResponseCaching(this IServiceCollection services)
+        => services.AddResponseCaching();
+
+    // ---------
     private static SymmetricSecurityKey GetSecurityKey()
     {
         var key = Environment.GetEnvironmentVariable("HotelListingApiSecretKey");

@@ -30,6 +30,7 @@ public class CountryController : ControllerBase
 
     // GET: api/Countries
     [HttpGet]
+    [ResponseCache(Duration = 60)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCountries([FromQuery] QueryParameters queryParameters)

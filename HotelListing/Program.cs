@@ -82,7 +82,9 @@ namespace HotelListing
             builder.Services.AddScoped<IAuthManager, AuthManager>();
             
             builder.Services.ConfigureJwt(configuration);
-
+            
+            builder.Services.ConfigureResponseCaching();
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -94,6 +96,8 @@ namespace HotelListing
             app.ConfigureExceptionHandler();    
 
             app.UseCors("AllowAll");
+            
+            app.UseResponseCaching();
             
             app.UseHttpsRedirection();
 
