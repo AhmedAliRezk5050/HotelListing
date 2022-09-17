@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using AspNetCoreRateLimit;
 using HotelListing.DataAccess;
 using HotelListing.DataAccess.IRepository;
 using HotelListing.DataAccess.Repository;
@@ -85,11 +86,13 @@ namespace HotelListing
 
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             builder.Services.AddScoped<IAuthManager, AuthManager>();
-
             builder.Services.ConfigureJwt(configuration);
 
+            builder.Services.AddMemoryCache();
+            builder.Services.ConfigureRateLimitingOptions();
+            builder.Services.AddHttpContextAccessor();
+            
             builder.Services.ConfigureResponseCaching();
             builder.Services.ConfigureHttpCacheHeaders();
             
@@ -103,6 +106,8 @@ namespace HotelListing
 
             app.ConfigureExceptionHandler();
 
+            app.UseIpRateLimiting();
+            
             app.UseCors("AllowAll");
 
             app.UseResponseCaching();

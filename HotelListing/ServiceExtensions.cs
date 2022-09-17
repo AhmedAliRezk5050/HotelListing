@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using AspNetCoreRateLimit;
 using HotelListing.Models;
 using HotelListing.Models.Services.Auth;
 using Marvin.Cache.Headers;
@@ -83,10 +84,18 @@ public static class ServiceExtensions
                 expirationOpt.MaxAge = 65;
                 expirationOpt.CacheLocation = CacheLocation.Private;
             },
-            (validationOpt) =>
-            {
-                validationOpt.MustRevalidate = true;
-            });
+            (validationOpt) => { validationOpt.MustRevalidate = true; });
+
+    public static void ConfigureRateLimitingOptions(this IServiceCollection services)
+    {
+        var rateLimitRules = new List<RateLimitRule> { new RateLimitRule { Endpoint = "*", Limit = 3, Period = "5m" } };
+        
+        services.Configure<IpRateLimitOptions>(opt => { opt.GeneralRules = rateLimitRules; });
+        services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+        services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+    }
 
     // ---------
     private static SymmetricSecurityKey GetSecurityKey()
