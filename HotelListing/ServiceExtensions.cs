@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using HotelListing.Models;
 using HotelListing.Models.Services.Auth;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -76,7 +77,16 @@ public static class ServiceExtensions
         => services.AddResponseCaching();
 
     public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
-        => services.AddHttpCacheHeaders();
+        => services.AddHttpCacheHeaders(
+            (expirationOpt) =>
+            {
+                expirationOpt.MaxAge = 65;
+                expirationOpt.CacheLocation = CacheLocation.Private;
+            },
+            (validationOpt) =>
+            {
+                validationOpt.MustRevalidate = true;
+            });
 
     // ---------
     private static SymmetricSecurityKey GetSecurityKey()
